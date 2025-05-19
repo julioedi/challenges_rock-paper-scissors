@@ -1,0 +1,227 @@
+@use "colors" as *;
+@use "vars" as *;
+
+:root {
+    --handleSize: 150px;
+}
+
+.mws {
+    width: 100%;
+    max-width: 700px;
+}
+
+#rules {
+    $size: calc(var(--handleSize) * 3.1);
+    width: $size;
+    height: $size;
+    display: flex;
+    position: relative;
+    flex-wrap: wrap;
+    background-image: url(./assets/images/bg-pentagon.svg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 75%;
+
+    &>.coin_wrap {
+        position: absolute;
+    }
+
+    .coin_wrap.scissors {
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .coin_wrap.spock {
+        top: 0.9em;
+        left: 0;
+    }
+
+    .coin_wrap.paper {
+        top: 0.9em;
+        right: 0;
+    }
+
+    .coin_wrap.rock {
+        bottom: 0;
+        right: 0.4em;
+    }
+
+    .coin_wrap.lizard {
+        bottom: 0;
+        left: 0.4em;
+    }
+}
+
+@mixin overlay {
+    position: absolute;
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.04);
+    border-radius: 50%;
+    z-index: -99;
+}
+
+.coin_wrap {
+    position: relative;
+    font-size: var(--handleSize);
+    display: flex;
+
+    .before {
+        @include overlay;
+        transform: scale(0.15);
+        inset: -100%;
+        transition: $transition;
+        pointer-events: none;
+
+        &:before {
+            @include overlay;
+            $size: 12.5%;
+            content: "";
+            top: $size;
+            left: $size;
+            right: $size;
+            bottom: $size;
+        }
+
+        &:after {
+            @include overlay;
+            $size: 25%;
+            content: "";
+            top: $size;
+            left: $size;
+            right: $size;
+            bottom: $size;
+        }
+    }
+
+    &.active {
+        .before {
+            transform: scale(1);
+            display: flex;
+        }
+    }
+
+    .coin {
+        background: var(--color);
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 1em;
+        height: 1em;
+        border-radius: 50%;
+        padding: 0.125em;
+        overflow: hidden;
+        color: #3C4262;
+        transition: $transition;
+        cursor: pointer;
+        box-shadow: 0 0.05em 0 rgb(20, 21, 57, 0.12);
+
+        &:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0.3em 0.1em rgb(20, 21, 57, 0.12);
+            color:red;
+            svg{
+                color:var(--color)
+            }
+        }
+
+        &.spock {
+            --color: #42B6CF;
+        }
+        &.scissors{
+            --color: #EBA215;
+        }
+        &.paper{
+            --color: #4D6AF4;
+        }
+        &.lizard{
+            --color: #8958E5;
+        }
+        &.rock{
+            --color: #DD3858;
+        }
+
+        .solid {
+            position: absolute;
+            inset: 0;
+            background: inherit;
+
+            &.overlay {
+                transform: translateY(-0.05em);
+                border-radius: 50%;
+            }
+
+            &.bkg {
+                background: rgba(0, 0, 0, 0.16);
+            }
+        }
+
+        .wrap {
+            background-color: #fff;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0.05em 0 rgba(60, 66, 98, 0.24) inset;
+
+            svg {
+                width: 0.4em;
+                height: 0.4em;
+                transition: $transition;
+            }
+        }
+    }
+
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+    padding-bottom: 64px;
+    gap: 24px;
+
+    #rules_btn {
+        padding: 12px 40px;
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        border: 1px solid white;
+        border-radius: 8px;
+        position: absolute;
+        bottom: 24px;
+        right: 24px
+    }
+
+    header {
+        padding: 32px;
+        border: 3px solid #ffffff60;
+        border-radius: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .score {
+            min-width: 180px;
+            padding: 16px;
+            border-radius: 12px;
+            background: #fff;
+            color: $score;
+            text-align: center;
+            font-weight: 500;
+            text-transform: uppercase;
+            @include user-select-none;
+
+            .number {
+                font-size: 48px;
+                font-weight: bold;
+                color: $text;
+            }
+        }
+    }
+}
