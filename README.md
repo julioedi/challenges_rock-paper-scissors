@@ -6,5 +6,5 @@ Practica challenge using React + Typescript
 ## Links
 
 Challenge: https://www.frontendmentor.io/challenges/rock-paper-scissors-game-pTgwgvgH?tab=downloads
-Live: https://challenges.julioedi.com/challenges_rock-paper-scissors
+Live: https://challenges-rock-paper-scissors.vercel.app/
 
