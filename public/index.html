@@ -1,11 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>React App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rock Paper Scissors Spock Lizard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --background: #141539;
+      --backgroundOverlay: #1F3756;
+      --maxSize: 1440px;
+      --blurSize: 300px;
+      --score: #2A46C0;
+      --text: #565467;
+      --handleSize: 150px;
+      font-family: "Barlow Semi Condensed", sans-serif;
+    }
+    *{
+      box-sizing: border-box;
+    }
+    body {
+      padding: 0;
+      margin: 0;
+      background: var(--background);
+      color: #fff;
+    }
+
+    #background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      isolation: isolate;
+    }
+
+    #background svg {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background-blend-mode: hard-light;
+      opacity: 0.12;
+      filter: grayscale(1);
+    }
+
+    #background:before {
+      position: absolute;
+      content: "";
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      filter: blur(calc(var(--maxSize) / 5));
+      width: var(--maxSize);
+      height: var(--maxSize);
+      display: flex;
+      background: var(--backgroundOverlay);
+    }
+
+    #root {
+      position: fixed;
+      inset: 0;
+    }
+  </style>
+  <style id="windowSize"></style>
 </head>
+
 <body>
+  <div id="background">
+    <svg viewBox="0 0 1920 1080" xmlns='http://www.w3.org/2000/svg'>
+      <filter id='noiseFilter'>
+        <feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch' />
+      </filter>
+      <rect width='100%' height='100%' filter='url(#noiseFilter)' />
+    </svg>
+  </div>
+  <script>
+    const bkg = document.querySelector("#background svg");
+    function setScreenSize() {
+      const aspect = window.innerWidth > window.innerHeight;
+      const el = aspect ? window.innerWidth : window.innerHeight;
+      const size = document.getElementById("windowSize");
+      const scale = Math.round(el * .75);
+      const blur = Math.round((scale / 2) * 2);
+      size.innerHTML = `:root{--maxSize:${Math.round(el * .75)}px;--blurSize:${blur}px;}`;
+      bkg?.setAttribute("viewBox",`0 0 ${window.innerWidth} ${window.innerHeight}`)
+    }
+    setScreenSize();
+    window.addEventListener("resize", setScreenSize);
+  </script>
   <div id="root"></div>
 </body>
+
 </html>
