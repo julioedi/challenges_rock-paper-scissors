@@ -43,6 +43,16 @@ const selectionsList: selectionObject = {
     }
 }
 
+type beatsProps = { [key in selectionType]: selectionType[] };
+const beats:beatsProps = {
+    spock:["scissors","rock"],
+    lizard:["spock","paper"],
+    rock:["lizard","scissors"],
+    paper:["rock","spock"],
+    scissors:["paper","lizard"]
+};
+export {beats};
+
 export {selectionsList}
 
 const getMaxDimension = (icons: selectionObject): number => {

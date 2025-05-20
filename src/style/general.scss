@@ -1,13 +1,19 @@
 @use "colors" as *;
 @use "vars" as *;
 
-:root {
-    --handleSize: 150px;
-}
-
 .mws {
     width: 100%;
     max-width: 700px;
+}
+
+:root {
+    @media (max-width:800px) {
+        --handleSize: 124px;
+    }
+
+    @media (max-width:540px) {
+        --handleSize: 80px;
+    }
 }
 
 #rules {
@@ -21,9 +27,32 @@
     background-position: center center;
     background-repeat: no-repeat;
     background-size: 75%;
+    justify-content: center;
+    align-items: center;
 
     &>.coin_wrap {
         position: absolute;
+    }
+
+    &.completed {
+        flex-direction: row;
+        width: 100%;
+        gap: 48px;
+        padding-top: 80px;
+
+        &>.coin_wrap {
+            position: relative;
+        }
+
+        @media (max-width:800px) {
+            padding-top: 0;
+            padding-bottom: 48px;
+
+            .title {
+                top: unset;
+                bottom: -32px;
+            }
+        }
     }
 
     .coin_wrap.scissors {
@@ -51,6 +80,31 @@
         bottom: 0;
         left: 0.4em;
     }
+
+    &.userPick {
+        background-image: none;
+
+        .coin_wrap {
+            transform: scale(0);
+
+            &.current {
+                left: 50%;
+                top: 50%;
+                right: unset;
+                bottom: unset;
+                transform: scale(1) translate(-50%, -50%);
+
+                &.end {
+                    position: relative;
+                    top: unset;
+                    left: unset;
+                    right: unset;
+                    bottom: unset;
+                    transform: scale(1);
+                }
+            }
+        }
+    }
 }
 
 @mixin overlay {
@@ -65,6 +119,62 @@
     position: relative;
     font-size: var(--handleSize);
     display: flex;
+    transition: $transition;
+
+    .title {
+        position: absolute;
+        font-size: 48px;
+        top: -80px;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: $transition;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    &.current {
+        --handleSize: 300px;
+        pointer-events: none;
+
+        .title {
+            opacity: 1;
+            text-transform: uppercase;
+            width: max-content;
+            text-align: center;
+            transition-delay: 1s
+        }
+
+        @media (max-width: 1280px) {
+            padding-top: 0;
+            --handleSize: 200px;
+
+            .title {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 800px) {
+            --handleSize: 128px;
+
+            .title {
+                font-size: 14px;
+            }
+        }
+    }
+
+    &.empty {
+        .coin {
+            background: transparent;
+            box-shadow: 0 0 0 transparent;
+
+            .wrap {
+                box-shadow: none;
+                background: $background
+            }
+        }
+    }
 
     .before {
         @include overlay;
@@ -116,29 +226,43 @@
         transition: $transition;
         cursor: pointer;
         box-shadow: 0 0.05em 0 rgb(20, 21, 57, 0.12);
+        $smallTRanstion: 0.1s ease all;
 
         &:hover {
             transform: scale(1.1);
             box-shadow: 0 0.3em 0.1em rgb(20, 21, 57, 0.12);
-            color:red;
-            svg{
-                color:var(--color)
+
+        }
+
+        &:active {
+
+            .solid.overlay,
+            .wrap {
+                transform: unset;
+
+                svg {
+                    color: var(--color)
+                }
             }
         }
 
         &.spock {
             --color: #42B6CF;
         }
-        &.scissors{
+
+        &.scissors {
             --color: #EBA215;
         }
-        &.paper{
+
+        &.paper {
             --color: #4D6AF4;
         }
-        &.lizard{
+
+        &.lizard {
             --color: #8958E5;
         }
-        &.rock{
+
+        &.rock {
             --color: #DD3858;
         }
 
@@ -150,6 +274,7 @@
             &.overlay {
                 transform: translateY(-0.05em);
                 border-radius: 50%;
+                transition: $smallTRanstion;
             }
 
             &.bkg {
@@ -158,6 +283,7 @@
         }
 
         .wrap {
+            transform: translateY(-0.025em);
             background-color: #fff;
             border-radius: 50%;
             position: relative;
@@ -167,6 +293,7 @@
             justify-content: center;
             align-items: center;
             box-shadow: 0 0.05em 0 rgba(60, 66, 98, 0.24) inset;
+            transition: $smallTRanstion;
 
             svg {
                 width: 0.4em;
@@ -195,8 +322,20 @@
         border-radius: 8px;
         position: absolute;
         bottom: 24px;
-        right: 24px
+        right: 24px;
+        cursor: pointer;
     }
+
+    @media (max-width:540px) {
+        #rules_btn {
+            position: relative;
+            order: 3;
+            bottom: unset;
+            right: unset;
+        }
+    }
+
+
 
     header {
         padding: 32px;
@@ -224,4 +363,171 @@
             }
         }
     }
+
+    @media (max-width:540px) {
+        header {
+            padding: 16px;
+            border-radius: 8px;
+
+            img {
+                max-width: 54px;
+                height: auto;
+            }
+
+            .score {
+                min-width: 96px;
+                padding: 8px 16px;
+
+                .number {
+                    font-size: 24px;
+                }
+            }
+        }
+    }
+}
+
+#rules_details {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    pointer-events: none;
+    &.active {
+        pointer-events: all;
+
+        .bkg {
+            opacity: 1;
+        }
+
+        .contain {
+            transform: unset;
+        }
+    }
+
+    .bkg {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(12px);
+        cursor: pointer;
+        opacity: 0;
+        transition: $transition;
+    }
+
+    .contain {
+        padding: 48px 32px;
+        position: relative;
+        width: 100%;
+        max-height: 100%;
+        max-width: 400px;
+        height: max-content;
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border-radius: 8px;
+        color: $text;
+        gap: 24px;
+        transform-origin: center;
+        transform: translateY(100%) scale(0);
+        transition: $transition;
+
+        .head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            h1 {
+                margin: 0;
+            }
+
+            .close {
+                padding: 12px;
+                cursor: pointer;
+                transition: $transition;
+
+                &:hover {
+                    filter: brightness(0.1);
+                    transform: scale(1.15);
+                }
+            }
+        }
+
+        .preview {
+            width: 100%;
+            height: auto;
+        }
+    }
+    
+    @media (max-width: 540px) {
+        padding:0;
+        .contain{
+            max-width: unset;
+            max-height: unset;
+            width: 100dvw;
+            height: 100dvh;
+            border-radius: 0;
+            .preview{
+                height: 100%;
+                object-fit: contain;
+            }
+        }
+    }
+}
+
+.wins {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    transition: $transition;
+    margin-left: 0;
+    width: 140px;
+    height: 104px;
+    position: relative;
+
+    &.start {
+        width: 0;
+        opacity: 0;
+        margin-left: -24px;
+    }
+
+    @mixin complete {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: max-content;
+    }
+
+    @media (max-width:540px) {
+        order: 3
+    }
+
+    h1 {
+        margin: 0;
+        top: 0;
+        @include complete;
+    }
+
+    .rest_button {
+        @include user-select-none;
+        @include complete;
+        bottom: 0;
+        cursor: pointer;
+        display: inline-flex;
+        background: linear-gradient(#fff, #eee);
+        text-transform: uppercase;
+        font-size: 16px;
+        border-radius: 4px;
+        font-weight: 600;
+        padding: 12px 32px;
+        color: $text;
+    }
+}
+
+.rules_wrap {
+    display: flex;
+    align-items: center;
+    flex: 1;
 }

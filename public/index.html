@@ -15,9 +15,10 @@
       --background: #141539;
       --backgroundOverlay: #1F3756;
       --maxSize: 1440px;
-      --blurSize: 288px;
+      --blurSize: 300px;
       --score: #2A46C0;
       --text: #565467;
+      --handleSize: 150px;
       font-family: "Barlow Semi Condensed", sans-serif;
     }
     *{
@@ -55,7 +56,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       border-radius: 50%;
-      filter: blur(calc(var(--blurSize) / 2));
+      filter: blur(calc(var(--maxSize) / 5));
       width: var(--maxSize);
       height: var(--maxSize);
       display: flex;
@@ -68,18 +69,6 @@
     }
   </style>
   <style id="windowSize"></style>
-  <script>
-    function setScreenSize() {
-      const aspect = window.innerWidth > window.innerHeight;
-      const el = aspect ? window.innerWidth : window.innerHeight;
-      const size = document.getElementById("windowSize");
-      const scale = Math.round(el * .75);
-      const blur = Math.round((scale / 2) * 2);
-      size.innerHTML = `:root{--maxSize:${Math.round(el * .75)}px;--blurSize:${blur}px;}`;
-    }
-    setScreenSize();
-    window.addEventListener("resize", setScreenSize);
-  </script>
 </head>
 
 <body>
@@ -91,6 +80,20 @@
       <rect width='100%' height='100%' filter='url(#noiseFilter)' />
     </svg>
   </div>
+  <script>
+    const bkg = document.querySelector("#background svg");
+    function setScreenSize() {
+      const aspect = window.innerWidth > window.innerHeight;
+      const el = aspect ? window.innerWidth : window.innerHeight;
+      const size = document.getElementById("windowSize");
+      const scale = Math.round(el * .75);
+      const blur = Math.round((scale / 2) * 2);
+      size.innerHTML = `:root{--maxSize:${Math.round(el * .75)}px;--blurSize:${blur}px;}`;
+      bkg?.setAttribute("viewBox",`0 0 ${window.innerWidth} ${window.innerHeight}`)
+    }
+    setScreenSize();
+    window.addEventListener("resize", setScreenSize);
+  </script>
   <div id="root"></div>
 </body>
 
