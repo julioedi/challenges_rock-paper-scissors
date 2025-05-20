@@ -275,6 +275,14 @@ class App extends Component {
                 transition: "none"
               }
             }}
+
+            ref={(e) => {
+              setTimeout(async () => {
+                if (!e?.container || this.result !== 2) return;
+                e.container.classList.add("active")
+              }, 300)
+
+            }}
           />
           <FinalMessage />
           <Coin
@@ -288,6 +296,9 @@ class App extends Component {
               setTimeout(async () => {
                 if (!e?.container) return;
                 e.container.classList.remove("animate");
+                if (this.result !== 0) return;
+                await wait();
+                e.container.classList.add("active");
               }, 300)
 
             }}
